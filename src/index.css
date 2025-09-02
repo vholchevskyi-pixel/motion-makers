@@ -8,35 +8,45 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Cinematic Dark Theme for WoWAnimations */
+    --background: 217 91% 7%; /* Deep space blue #0a0f1c */
+    --foreground: 210 40% 98%; /* Light text */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 217 85% 10%; /* Slightly lighter than background */
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 217 85% 8%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 191 100% 50%; /* Electric cyan #00d4ff */
+    --primary-foreground: 217 91% 7%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 225 83% 53%; /* Gradient blue #3b82f6 */
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 217 70% 15%;
+    --muted-foreground: 217 32% 65%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 262 83% 58%; /* Gradient purple #6366f1 */
+    --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 217 50% 20%;
+    --input: 217 50% 12%;
+    --ring: 191 100% 50%;
 
-    --radius: 0.5rem;
+    /* Custom design tokens for animations */
+    --gradient-primary: linear-gradient(135deg, hsl(262, 83%, 58%), hsl(225, 83%, 53%));
+    --gradient-hero: linear-gradient(180deg, hsl(217, 91%, 7%) 0%, hsl(217, 85%, 10%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(217, 85%, 10%) 0%, hsl(217, 70%, 8%) 100%);
+    --glow-cyan: 0 0 30px hsl(191, 100%, 50%, 0.3);
+    --glow-purple: 0 0 40px hsl(262, 83%, 58%, 0.2);
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --backdrop-glass: rgba(10, 15, 28, 0.8);
+
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -100,6 +110,89 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    background: var(--gradient-hero);
+  }
+}
+
+@layer utilities {
+  /* Glassmorphism utilities */
+  .glass {
+    background: var(--backdrop-glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid hsl(var(--border));
+  }
+
+  .glass-card {
+    background: var(--gradient-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(var(--border) / 0.3);
+  }
+
+  /* Glow effects */
+  .glow-cyan {
+    box-shadow: var(--glow-cyan);
+  }
+
+  .glow-purple {
+    box-shadow: var(--glow-purple);
+  }
+
+  /* Hero gradient text */
+  .gradient-text {
+    background: var(--gradient-primary);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Smooth transitions */
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+
+  /* Hover scale animation */
+  .hover-scale {
+    @apply transition-smooth hover:scale-105;
+  }
+
+  /* Parallax effect */
+  .parallax {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+}
+
+@layer components {
+  /* Navigation styles */
+  .nav-link {
+    @apply relative text-foreground/80 hover:text-primary transition-smooth;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: hsl(var(--primary));
+    transition: width 0.3s ease;
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    width: 100%;
+  }
+
+  /* Button variants */
+  .btn-hero {
+    @apply bg-gradient-to-r from-primary to-accent text-background font-semibold px-8 py-4 rounded-full;
+    @apply hover:shadow-[0_0_30px_hsl(var(--primary)/0.5)] transition-smooth hover-scale;
+  }
+
+  .btn-glass {
+    @apply glass text-foreground border-primary/30 hover:border-primary/60 px-6 py-3 rounded-lg;
+    @apply hover:bg-primary/10 transition-smooth;
   }
 }
